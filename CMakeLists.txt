@@ -104,7 +104,7 @@ if (TOP_LEVEL)
 endif ()
 
 ## sea-dsa
-add_definitions(-std=c++11)
+add_definitions(-std=c++11)  # TODO: might be a problem
 add_definitions(-Wno-redeclared-class-member)
 add_definitions(-Wno-sometimes-uninitialized)
 add_definitions(-Wno-deprecated-declarations)
