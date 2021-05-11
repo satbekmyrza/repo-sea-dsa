@@ -23,8 +23,7 @@ namespace sea_dsa {
   
   enum GlobalAnalysisKind {
     CONTEXT_INSENSITIVE,
-    CONTEXT_SENSITIVE,
-    FLAT_MEMORY
+    CONTEXT_SENSITIVE
   };
   
   // Common API for global analyses
@@ -74,9 +73,8 @@ namespace sea_dsa {
     
     ContextInsensitiveGlobalAnalysis (const llvm::DataLayout &dl, 
 				      const llvm::TargetLibraryInfo &tli,
-				      llvm::CallGraph &cg, SetFactory &setFactory,
-				      const bool useFlatMemory) 
-      : GlobalAnalysis (useFlatMemory ? FLAT_MEMORY: CONTEXT_INSENSITIVE),
+				      llvm::CallGraph &cg, SetFactory &setFactory) 
+      : GlobalAnalysis (CONTEXT_INSENSITIVE),
 	m_dl (dl), m_tli (tli), m_cg (cg), m_setFactory (setFactory), 
 	m_graph (nullptr) {}
     
@@ -167,29 +165,6 @@ namespace sea_dsa {
     virtual GlobalAnalysis& getGlobalAnalysis () = 0;
     
   };  
-
-  class FlatMemoryGlobal : public DsaGlobalPass
-  {
-    
-    Graph::SetFactory m_setFactory;
-    std::unique_ptr<ContextInsensitiveGlobalAnalysis> m_ga;
-    
-  public:
-    
-    static char ID;
-    
-    FlatMemoryGlobal ();
-    
-    void getAnalysisUsage (llvm::AnalysisUsage &AU) const override;
-    
-    bool runOnModule (llvm::Module &M) override;
-    
-    const char * getPassName() const override 
-    { return "Flat memory Dsa pass"; }
-    
-    GlobalAnalysis& getGlobalAnalysis ()  
-    { return *(static_cast<GlobalAnalysis*> (&*m_ga)); } 
-  };
   
   class ContextInsensitiveGlobal : public DsaGlobalPass
   {
